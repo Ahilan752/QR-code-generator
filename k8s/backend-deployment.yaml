@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qr-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qr-backend
+  template:
+    metadata:
+      labels:
+        app: qr-backend
+    spec:
+      containers:
+        - name: qr-backend
+          image: ahilan0143/qr-backend:latest
+          ports:
+            - containerPort: 5000
