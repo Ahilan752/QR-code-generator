@@ -15,5 +15,6 @@ spec:
       containers:
         - name: qr-backend
           image: ahilan0143/qr-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
