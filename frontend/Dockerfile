@@ -3,7 +3,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install && chmod -R 777 node_modules/.bin
+RUN npm install
 
 COPY . .
 
