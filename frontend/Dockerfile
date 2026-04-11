@@ -1,11 +1,12 @@
-FROM node:18-alpine as build
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm install && chmod -R 777 node_modules/.bin
 
 COPY . .
+
 RUN npm run build
 
 FROM nginx:alpine
