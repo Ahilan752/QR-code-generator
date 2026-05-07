@@ -15,13 +15,13 @@ pipeline {
 
         stage('Build Backend Image') {
             steps {
-                sh 'docker build -t $BACKEND_IMAGE ./backend'
+                sh 'docker build --no-cache -t $BACKEND_IMAGE ./backend'
             }
         }
 
         stage('Build Frontend Image') {
             steps {
-                sh 'docker build -t $FRONTEND_IMAGE ./frontend'
+                sh 'docker build --no-cache -t $FRONTEND_IMAGE ./frontend'
             }
         }
 
