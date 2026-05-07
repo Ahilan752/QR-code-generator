@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, FileText, User, QrCode } from "lucide-react";
 
-const API_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000/api/generate";
+const API_URL = process.env.REACT_APP_API_URL || "http://192.168.49.2:30005/api/generate";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState("url");

@@ -48,8 +48,13 @@ pipeline {
             steps {
                 sh 'kubectl apply -f k8s/backend-deployment.yaml'
                 sh 'kubectl apply -f k8s/backend-service.yaml'
+
+		sh 'kubectl apply -f k8s/mongo-deployment.yaml'
+                sh 'kubectl apply -f k8s/mongo-service.yaml'
+
                 sh 'kubectl apply -f k8s/frontend-deployment.yaml'
                 sh 'kubectl apply -f k8s/frontend-service.yaml'
+
                 sh 'kubectl rollout restart deployment/qr-backend'
                 sh 'kubectl rollout restart deployment/qr-frontend'
             }

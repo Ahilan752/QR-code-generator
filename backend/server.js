@@ -3,8 +3,13 @@ const cors = require("cors");
 const QRCode = require("qrcode");
 require("dotenv").config();
 
+const connectDB = require("./db");
+const QR = require("./models/QR");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+connectDB();
 
 app.use(cors());
 app.use(express.json());
@@ -42,8 +47,11 @@ app.post("/api/generate", async (req, res) => {
 
     if (type === "url") {
       let url = data.url?.trim();
+
       if (!url) {
-        return res.status(400).json({ message: "URL is required" });
+        return res.status(400).json({
+          message: "URL is required"
+        });
       }
 
       if (!url.startsWith("http://") && !url.startsWith("https://")) {
@@ -51,20 +59,35 @@ app.post("/api/generate", async (req, res) => {
       }
 
       qrText = url;
+
     } else if (type === "text") {
+
       if (!data.text?.trim()) {
-        return res.status(400).json({ message: "Text is required" });
+        return res.status(400).json({
+          message: "Text is required"
+        });
       }
+
       qrText = data.text.trim();
+
     } else if (type === "contact") {
-      if (!data.firstName?.trim() && !data.phone?.trim() && !data.email?.trim()) {
+
+      if (
+        !data.firstName?.trim() &&
+        !data.phone?.trim() &&
+        !data.email?.trim()
+      ) {
         return res.status(400).json({
           message: "At least first name, phone, or email is required"
         });
       }
+
       qrText = createVCard(data);
+
     } else {
-      return res.status(400).json({ message: "Invalid QR type" });
+      return res.status(400).json({
+        message: "Invalid QR type"
+      });
     }
 
     const qrCodeDataURL = await QRCode.toDataURL(qrText, {
@@ -72,14 +95,24 @@ app.post("/api/generate", async (req, res) => {
       margin: 2
     });
 
+    // Save to MongoDB
+    await QR.create({
+      type,
+      rawData: qrText
+    });
+
     res.json({
       success: true,
       qrCode: qrCodeDataURL,
       rawData: qrText
     });
+
   } catch (error) {
     console.error("QR generation error:", error);
-    res.status(500).json({ message: "Failed to generate QR code" });
+
+    res.status(500).json({
+      message: "Failed to generate QR code"
+    });
   }
 });
 
